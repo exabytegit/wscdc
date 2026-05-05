@@ -1,7 +1,6 @@
-import { USE_MOCK } from '../config.js';
 import { constatar } from '../api.js';
 import { validateConstatarForm } from '../validators.js';
-import { renderResult } from '../renderers.js';
+import { renderResult, stateFromVerdict } from '../renderers.js';
 
 const form = document.querySelector('#constatar-form');
 const output = document.querySelector('#result-output');
@@ -20,23 +19,13 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
-  if (USE_MOCK) {
-    renderResult(output, {
-      ok: true,
-      service: 'wscdc',
-      arcaEnv: 'homologacion',
-      verdict: 'mock_pending',
-      mensaje: 'Validacion local correcta. ComprobanteConstatar real queda pendiente de casos oficiales.',
-      payload,
-    });
-    return;
-  }
-
   try {
     renderResult(output, 'Consultando API...', 'loading');
-    renderResult(output, await constatar(payload));
+    const result = await constatar(payload);
+    renderResult(output, result, stateFromVerdict(result));
   } catch (error) {
-    renderResult(output, error.data || error.message, 'technical-error');
+    const state = error.status === 400 ? 'functional-error' : 'technical-error';
+    renderResult(output, error.data || error.message, state);
   }
 });
 

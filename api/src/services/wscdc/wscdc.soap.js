@@ -108,13 +108,12 @@ export class WscdcClient {
 
   async constatar(payload) {
     const normalizedPayload = validateConstatarPayload(payload);
-    throw new ApiError({
-      status: 501,
-      descripcion: 'ComprobanteConstatar queda pendiente hasta validar casos oficiales de homologacion.',
-      scenario: 'CONSTATAR_PENDING_OFFICIAL_CASES',
-      codigo: null,
-      cause: { payload: normalizedPayload },
-    });
+    const ticket = await this.wsaaClient.getAccessTicket();
+    const xml = await this.post(
+      WSCDC_OPERATIONS.constatar,
+      `${authXml(ticket)}${cmpReqXml(normalizedPayload)}`,
+    );
+    return mapConstatarResponse(assertNoSoapFault(xml));
   }
 
   mapConstatarXml(xml) {

@@ -48,5 +48,6 @@ Resumen operativo extraido del manual oficial `WSCDC-manual-desarrollador-v4.pdf
 ## Impacto en esta base
 
 - Confirmado: el namespace/forma SOAP que usamos para `Dummy` y catalogos es consistente con el manual.
-- Confirmado: `constatar` debe seguir bloqueado hasta modelar bien `Observaciones` vs `Errors` y cargar casos oficiales.
+- Implementado: `ComprobanteConstatar` usa `Auth` y `CmpReq`, validando localmente antes de invocar ARCA.
 - Ajustado: validacion local de `DocTipoReceptor` a 2 digitos y `DocNroReceptor` a valor numerico corto segun el apartado de validacion del manual.
+- Pendiente: cargar un caso oficial de homologacion para smoke real sin inventar datos.

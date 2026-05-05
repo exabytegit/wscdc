@@ -80,11 +80,16 @@ select {
   border-color: var(--ok);
 }
 
+.result-box[data-state="success-approved-with-observations"] {
+  border-color: var(--warn);
+}
+
 .status-card[data-state="degraded"] {
   border-color: var(--warn);
 }
 
 .status-card[data-state="unavailable"],
+.result-box[data-state="rejected"],
 .result-box[data-state="technical-error"],
 .result-box[data-state="functional-error"] {
   border-color: var(--danger);

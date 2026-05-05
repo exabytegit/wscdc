@@ -23,4 +23,4 @@ El TA se persiste como `ta-{ambiente}-{servicio}.json`, por ejemplo `ta-homologa
 - CSS modular responsive.
 - JavaScript ES Modules.
 - `fetch` solo contra la API propia.
-- Mock visual para constatacion hasta validar homologacion oficial.
+- Formulario de constatacion conectado a `POST /api/wscdc/constatar`.

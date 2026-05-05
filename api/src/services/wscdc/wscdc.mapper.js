@@ -85,10 +85,11 @@ export function mapConstatarResponse(parsed) {
   const observaciones = normalizeMessages(result, 'Observaciones');
   const errors = normalizeMessages(result, 'Errors');
   const events = normalizeMessages(result, 'Events');
+  const verdict = resolveVerdict(resultado, observaciones, errors);
 
   return {
-    ok: errors.length === 0,
-    verdict: resolveVerdict(resultado, observaciones, errors),
+    ok: verdict === 'approved' || verdict === 'approved_with_observations',
+    verdict,
     resultado,
     cmpResp: normalizeCmpResp(result),
     observaciones,

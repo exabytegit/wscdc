@@ -66,19 +66,27 @@ describe('api routes', () => {
     });
   });
 
-  it('POST /api/wscdc/constatar returns controlled pending status', async () => {
+  it('POST /api/wscdc/constatar returns normalized constatar response', async () => {
     const app = appWith({
-      constatar: vi.fn().mockRejectedValue(new ApiError({
-        status: 501,
-        descripcion: 'Pendiente',
-        scenario: 'CONSTATAR_PENDING_OFFICIAL_CASES',
-      })),
+      constatar: vi.fn().mockResolvedValue({
+        ok: true,
+        verdict: 'approved',
+        resultado: 'A',
+        observaciones: [],
+        errors: [],
+        events: [],
+      }),
     });
 
     const res = await request(app).post('/api/wscdc/constatar').send(validPayload);
 
-    expect(res.status).toBe(501);
-    expect(res.body.scenario).toBe('CONSTATAR_PENDING_OFFICIAL_CASES');
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({
+      ok: true,
+      service: 'wscdc',
+      verdict: 'approved',
+      resultado: 'A',
+    });
   });
 
   it('POST /api/wscdc/constatar invalid payload returns validation error', async () => {

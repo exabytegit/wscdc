@@ -59,4 +59,4 @@ Prioridad documental:
 - Documentacion oficial WSAA.
 - SDKs o ejemplos externos solo como referencia complementaria.
 
-Decision v1: dummy y catalogos quedan preparados para homologacion real; `ComprobanteConstatar` queda stub validado hasta tener casos oficiales.
+Decision actual: dummy, catalogos y `ComprobanteConstatar` quedan implementados contra homologacion real; falta cargar un caso oficial para smoke funcional sin inventar datos.
