@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { buildLoginCmsEnvelope, buildLoginTicketRequest, isTicketValid, parseLoginCmsResponse } from '../src/services/wsaa.js';
 
 describe('wsaa service', () => {
-  it('builds a LoginTicketRequest for wsapoc', () => {
-    const xml = buildLoginTicketRequest({ service: 'wsapoc', now: new Date('2026-05-04T15:00:00.000Z') });
-    expect(xml).toContain('<service>wsapoc</service>');
+  it('builds a LoginTicketRequest for wscdc', () => {
+    const xml = buildLoginTicketRequest({ service: 'wscdc', now: new Date('2026-05-04T15:00:00.000Z') });
+    expect(xml).toContain('<service>wscdc</service>');
     expect(xml).toContain('<uniqueId>1777906800</uniqueId>');
   });
 

@@ -1,9 +1,9 @@
 {
-  "name": "wsapoc-api",
+  "name": "wscdc-api",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "API interna para WSAA/WSAPOC.",
+  "description": "API interna para WSAA/WSCDC.",
   "scripts": {
     "dev": "node --watch src/server.js",
     "dev:prod": "cross-env ARCA_ENV=produccion NODE_ENV=production node --watch src/server.js",

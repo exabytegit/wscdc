@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Constatar comprobante WSCDC</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <script type="module" src="assets/js/pages/constatar.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Navegacion principal">
+        <a class="brand" href="index.html">WSCDC</a>
+        <a aria-current="page" href="constatar.html">Constatar</a>
+        <a href="estado-api.html">Estado API</a>
+      </nav>
+    </header>
+    <main class="page-shell">
+      <section class="panel">
+        <p class="eyebrow">MVP seguro</p>
+        <h1>Constatar comprobante</h1>
+        <p>El formulario valida localmente y usa mock visual hasta habilitar casos oficiales de homologacion para `ComprobanteConstatar`.</p>
+      </section>
+
+      <form id="constatar-form" class="form-grid" novalidate>
+        <fieldset>
+          <legend>Datos del comprobante</legend>
+          <label>Modalidad
+            <select name="cbteModo" required>
+              <option value="CAE">CAE</option>
+              <option value="CAEA">CAEA</option>
+              <option value="CAI">CAI</option>
+            </select>
+          </label>
+          <label>CUIT emisor <input name="cuitEmisor" inputmode="numeric" required placeholder="20111111112"></label>
+          <label>Punto de venta <input name="ptoVta" type="number" min="1" max="99998" required></label>
+          <label>Tipo comprobante <input name="cbteTipo" type="number" min="1" max="999" required></label>
+          <label>Numero <input name="cbteNro" type="number" min="1" max="99999999" required></label>
+          <label>Fecha `yyyymmdd` <input name="cbteFch" inputmode="numeric" required placeholder="20250131"></label>
+          <label>Importe total <input name="impTotal" inputmode="decimal" required placeholder="1000.50"></label>
+          <label>Codigo autorizacion <input name="codAutorizacion" inputmode="numeric" required placeholder="12345678901234"></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Receptor opcional</legend>
+          <label>Tipo documento <input name="docTipoReceptor" inputmode="numeric" placeholder="80"></label>
+          <label>Numero documento <input name="docNroReceptor" inputmode="numeric" placeholder="30714509566"></label>
+        </fieldset>
+
+        <div class="form-actions">
+          <button class="button primary" type="submit">Simular constatacion</button>
+          <button class="button ghost" type="reset">Limpiar</button>
+        </div>
+      </form>
+
+      <section class="panel" aria-live="polite">
+        <h2>Resultado</h2>
+        <output id="result-output" class="result-box">Esperando datos.</output>
+      </section>
+    </main>
+  </body>
+</html>

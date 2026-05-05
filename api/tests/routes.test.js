@@ -4,8 +4,19 @@ import { createApp } from '../src/app.js';
 import { ApiError } from '../src/errors.js';
 
 function appWith(client) {
-  return createApp({ wsapocClient: client });
+  return createApp({ wscdcClient: client });
 }
+
+const validPayload = {
+  cbteModo: 'CAE',
+  cuitEmisor: '20111111112',
+  ptoVta: 1,
+  cbteTipo: 1,
+  cbteNro: 123,
+  cbteFch: '20250131',
+  impTotal: 1000.5,
+  codAutorizacion: '12345678901234',
+};
 
 describe('api routes', () => {
   it('GET /api/health returns dummy status', async () => {
@@ -17,88 +28,72 @@ describe('api routes', () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({
-      service: 'wsapoc',
+      ok: true,
+      service: 'wscdc',
       status: 'operational',
       appserver: 'OK',
       dbserver: 'OK',
       authserver: 'OK',
     });
-    expect(['homologacion', 'produccion']).toContain(res.body.arcaEnv);
   });
 
-  it('GET /api/health exposes degraded status when authserver is unavailable', async () => {
+  it('GET /api/health exposes degraded status', async () => {
     const app = appWith({
       dummy: vi.fn().mockResolvedValue({ appserver: 'OK', dbserver: 'OK', authserver: 'NO' }),
     });
 
     const res = await request(app).get('/api/health');
 
+    expect(res.body.status).toBe('degraded');
+  });
+
+  it('GET /api/wscdc/catalogos/modalidades returns normalized catalog', async () => {
+    const app = appWith({
+      catalog: vi.fn().mockResolvedValue({
+        items: [{ id: 'CAE', descripcion: 'Comprobante electronico' }],
+        errors: [],
+        events: [],
+      }),
+    });
+
+    const res = await request(app).get('/api/wscdc/catalogos/modalidades?refresh=1');
+
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({
-      service: 'wsapoc',
-      status: 'degraded',
-      appserver: 'OK',
-      dbserver: 'OK',
-      authserver: 'NO',
+      ok: true,
+      service: 'wscdc',
+      items: [{ id: 'CAE', descripcion: 'Comprobante electronico' }],
     });
-    expect(['homologacion', 'produccion']).toContain(res.body.arcaEnv);
   });
 
-  it('GET /api/consulta/cuit/:cuit returns one result', async () => {
+  it('POST /api/wscdc/constatar returns controlled pending status', async () => {
     const app = appWith({
-      getPublicacionApoc: vi.fn().mockResolvedValue({
-        codigo: 0,
-        descripcion: 'Ejecucion exitosa.',
-        resultado: { CUIT: '20111111112', Descripcion: 'TEST', FechaCondicion: '01/01/2026', FechaPublicacion: '02/01/2026' },
-      }),
+      constatar: vi.fn().mockRejectedValue(new ApiError({
+        status: 501,
+        descripcion: 'Pendiente',
+        scenario: 'CONSTATAR_PENDING_OFFICIAL_CASES',
+      })),
     });
 
-    const res = await request(app).get('/api/consulta/cuit/20111111112');
+    const res = await request(app).post('/api/wscdc/constatar').send(validPayload);
 
-    expect(res.status).toBe(200);
-    expect(res.body.resultado.CUIT).toBe('20111111112');
+    expect(res.status).toBe(501);
+    expect(res.body.scenario).toBe('CONSTATAR_PENDING_OFFICIAL_CASES');
   });
 
-  it('GET /api/consulta/cuit/:cuit rejects invalid CUITs', async () => {
-    const app = appWith({ getPublicacionApoc: vi.fn() });
+  it('POST /api/wscdc/constatar invalid payload returns validation error', async () => {
+    const app = appWith({
+      constatar: vi.fn().mockRejectedValue(new ApiError({
+        status: 400,
+        codigo: 200,
+        descripcion: 'CbteModo debe ser CAE, CAEA o CAI.',
+        scenario: 'VALIDATION_ERROR',
+      })),
+    });
 
-    const res = await request(app).get('/api/consulta/cuit/20111111113');
+    const res = await request(app).post('/api/wscdc/constatar').send({ ...validPayload, cbteModo: 'X' });
 
     expect(res.status).toBe(400);
-    expect(res.body.codigo).toBe(200);
     expect(res.body.scenario).toBe('VALIDATION_ERROR');
-  });
-
-  it('GET /api/consulta/rango returns paginated items', async () => {
-    const app = appWith({
-      getAllByPublicacion: vi.fn().mockResolvedValue({
-        codigo: 0,
-        descripcion: 'Ejecucion exitosa.',
-        items: [
-          { CUIT: '20111111112' },
-          { CUIT: '27222222224' },
-          { CUIT: '30333333339' },
-        ],
-      }),
-    });
-
-    const res = await request(app).get('/api/consulta/rango?desde=01/01/2026&hasta=31/01/2026&page=2&pageSize=2');
-
-    expect(res.status).toBe(200);
-    expect(res.body.items).toEqual([{ CUIT: '30333333339' }]);
-    expect(res.body.total).toBe(3);
-    expect(res.body.totalPages).toBe(2);
-  });
-
-  it('maps SOAP faults to normalized errors', async () => {
-    const app = appWith({
-      dummy: vi.fn().mockRejectedValue(new ApiError({ status: 502, descripcion: 'SOAP fault', scenario: 'SOAP_FAULT' })),
-    });
-
-    const res = await request(app).get('/api/health');
-
-    expect(res.status).toBe(502);
-    expect(res.body.scenario).toBe('SOAP_FAULT');
-    expect(res.body.requestId).toBeTruthy();
   });
 });

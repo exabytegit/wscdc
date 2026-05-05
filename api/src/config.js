@@ -27,31 +27,39 @@ function resolveArcaEnv() {
 const effectiveArcaEnv = resolveArcaEnv();
 const effectiveWsaaUrl = initialEnv.WSAA_URL
   ?? (effectiveArcaEnv === 'produccion' ? process.env.ARCA_WSAA_PROD_URL : process.env.ARCA_WSAA_HOMO_URL)
-  ?? process.env.WSAA_URL;
-const effectiveWsapocUrl = initialEnv.WSAPOC_URL
-  ?? (effectiveArcaEnv === 'produccion' ? process.env.ARCA_WSAPOC_PROD_URL : process.env.ARCA_WSAPOC_HOMO_URL)
-  ?? process.env.WSAPOC_URL;
+  ?? process.env.WSAA_URL
+  ?? (effectiveArcaEnv === 'produccion' ? 'https://wsaa.afip.gov.ar/ws/services/LoginCms' : 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms');
+const effectiveWscdcUrl = initialEnv.WSCDC_URL
+  ?? (effectiveArcaEnv === 'produccion' ? process.env.ARCA_WSCDC_PROD_URL : process.env.ARCA_WSCDC_HOMO_URL)
+  ?? process.env.WSCDC_URL
+  ?? (effectiveArcaEnv === 'produccion' ? 'https://servicios1.arca.gob.ar/WSCDC/service.asmx' : 'https://wswhomo.afip.gob.ar/WSCDC/service.asmx');
+const effectiveWscdcNamespace = initialEnv.WSCDC_NAMESPACE
+  ?? process.env.ARCA_WSCDC_NAMESPACE
+  ?? process.env.WSCDC_NAMESPACE
+  ?? 'http://servicios1.afip.gob.ar/wscdc/';
 
 const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: z.coerce.number().int().positive().default(3001),
+  PORT: z.coerce.number().int().positive().default(3002),
   API_BASE_PATH: z.string().min(1).default('/api'),
   ARCA_ENV: z.enum(['homologacion', 'produccion']).default('homologacion'),
-  ARCA_SERVICE: z.string().min(1).default('wsapoc'),
-  ARCA_CUIT_DELEGADO: z.string().regex(/^\d{11}$/),
+  ARCA_SERVICE: z.string().min(1).default('wscdc'),
+  ARCA_CUIT: z.string().regex(/^\d{11}$/).or(z.literal('')).default(''),
   WSAA_URL: z.string().url(),
-  WSAPOC_URL: z.string().url(),
-  WSAPOC_NAMESPACE: z.string().url().default('http://tempuri.org/'),
-  ARCA_CERT_PATH: z.string().min(1),
-  ARCA_KEY_PATH: z.string().min(1),
+  WSCDC_URL: z.string().url(),
+  WSCDC_NAMESPACE: z.string().url().default('http://servicios1.afip.gob.ar/wscdc/'),
+  ARCA_CERT_PATH: z.string().default(''),
+  ARCA_KEY_PATH: z.string().default(''),
   OPENSSL_BIN: z.string().optional().default('openssl'),
   TA_CACHE_DIR: z.string().optional().default('./tmp'),
   TA_RENEW_SKEW_SECONDS: z.coerce.number().int().nonnegative().default(600),
   REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().default(60000),
+  CORS_ORIGIN: z.string().default('http://127.0.0.1:5501'),
   LOG_LEVEL: z.string().default('info'),
 });
 
 function resolveFromRoot(value) {
+  if (!value) return '';
   return path.isAbsolute(value) ? value : path.resolve(apiRoot, value);
 }
 
@@ -59,7 +67,8 @@ const parsed = schema.safeParse({
   ...process.env,
   ARCA_ENV: effectiveArcaEnv,
   WSAA_URL: effectiveWsaaUrl,
-  WSAPOC_URL: effectiveWsapocUrl,
+  WSCDC_URL: effectiveWscdcUrl,
+  WSCDC_NAMESPACE: effectiveWscdcNamespace,
 });
 
 if (!parsed.success) {

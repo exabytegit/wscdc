@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Estado API WSCDC</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <script type="module" src="assets/js/pages/estado-api.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Navegacion principal">
+        <a class="brand" href="index.html">WSCDC</a>
+        <a href="constatar.html">Constatar</a>
+        <a aria-current="page" href="estado-api.html">Estado API</a>
+      </nav>
+    </header>
+    <main class="page-shell">
+      <section class="panel">
+        <p class="eyebrow">Diagnostico</p>
+        <h1>Estado tecnico</h1>
+        <p>Consulta la API intermedia. No expone Token, Sign, certificados ni XML SOAP.</p>
+        <button id="refresh-status" class="button primary" type="button">Actualizar</button>
+      </section>
+      <section class="status-grid" id="status-output" aria-live="polite"></section>
+    </main>
+  </body>
+</html>

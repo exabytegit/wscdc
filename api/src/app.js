@@ -13,7 +13,7 @@ export function createApp(deps = {}) {
 
   app.disable('x-powered-by');
   app.use(helmet());
-  app.use(cors({ origin: true }));
+  app.use(cors({ origin: config.CORS_ORIGIN === '*' ? true : config.CORS_ORIGIN }));
   app.use(express.json({ limit: '256kb' }));
   app.use(requestId);
   app.use(pinoHttp({ logger, genReqId: (req) => req.id }));

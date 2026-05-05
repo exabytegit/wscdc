@@ -1,0 +1,91 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(18px);
+  background: rgb(255 250 240 / 80%);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.nav a[aria-current="page"],
+.brand {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.brand {
+  margin-right: auto;
+  letter-spacing: .08em;
+}
+
+.hero,
+.page-shell {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.hero {
+  min-height: calc(100vh - 70px);
+  display: grid;
+  place-items: center;
+}
+
+.hero-card,
+.panel,
+.form-grid fieldset,
+.result-box,
+.status-card {
+  background: rgb(255 255 255 / 78%);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 28px;
+}
+
+.hero-card {
+  padding: clamp(2rem, 5vw, 5rem);
+}
+
+.page-shell {
+  padding: 2rem 0 4rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.panel,
+.form-grid fieldset,
+.result-box,
+.status-card {
+  padding: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 760px) {
+  fieldset {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
