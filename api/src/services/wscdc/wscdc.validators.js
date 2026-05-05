@@ -62,6 +62,12 @@ export function validateConstatarPayload(input) {
   if ((docTipoReceptor && !docNroReceptor) || (!docTipoReceptor && docNroReceptor)) {
     throw validationError('Si informa documento receptor, debe informar tipo y numero.');
   }
+  if (docTipoReceptor && !/^\d{2}$/.test(docTipoReceptor)) {
+    throw validationError('DocTipoReceptor debe ser numerico de 2 digitos.');
+  }
+  if (docNroReceptor && !/^\d{1,11}$/.test(docNroReceptor)) {
+    throw validationError('DocNroReceptor debe ser numerico de hasta 11 digitos.');
+  }
 
   const cbteFch = String(input?.cbteFch ?? input?.CbteFch ?? '').trim();
   if (!isValidYyyymmdd(cbteFch)) throw validationError('CbteFch debe tener formato yyyymmdd valido.');

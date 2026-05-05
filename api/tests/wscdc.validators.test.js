@@ -36,4 +36,9 @@ describe('wscdc validators', () => {
   it('requires both receptor document fields when one is present', () => {
     expect(() => validateConstatarPayload({ ...validPayload, docTipoReceptor: '80', docNroReceptor: '' })).toThrow(/documento receptor/);
   });
+
+  it('rejects invalid receptor document format', () => {
+    expect(() => validateConstatarPayload({ ...validPayload, docTipoReceptor: '8A' })).toThrow(/DocTipoReceptor/);
+    expect(() => validateConstatarPayload({ ...validPayload, docNroReceptor: '307145095661' })).toThrow(/DocNroReceptor/);
+  });
 });
