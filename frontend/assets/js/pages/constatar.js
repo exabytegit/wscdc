@@ -5,10 +5,66 @@ import { renderResult } from '../renderers.js';
 const form = document.querySelector('#constatar-form');
 const output = document.querySelector('#result-output');
 const submitButton = form.querySelector('button[type="submit"]');
+const exampleButton = document.querySelector('#load-example');
+
+export const CONSTATAR_FIELD_NAMES = [
+  'cbteModo',
+  'cuitEmisor',
+  'ptoVta',
+  'cbteTipo',
+  'cbteNro',
+  'cbteFch',
+  'impTotal',
+  'codAutorizacion',
+  'docTipoReceptor',
+  'docNroReceptor',
+];
+
+const VALIDATED_EXAMPLE = {
+  cbteModo: 'CAE',
+  cuitEmisor: '30714687650',
+  ptoVta: '2',
+  cbteTipo: '1',
+  cbteNro: '531979',
+  cbteFch: '20260504',
+  impTotal: '225786.00',
+  codAutorizacion: '86184110432968',
+  docTipoReceptor: '80',
+  docNroReceptor: '20307764327',
+};
 
 function formToPayload(formData) {
   return Object.fromEntries(formData.entries());
 }
+
+function fillForm(values) {
+  for (const name of CONSTATAR_FIELD_NAMES) {
+    if (!Object.prototype.hasOwnProperty.call(values, name)) continue;
+    const field = form.elements.namedItem(name);
+    if (field) field.value = values[name];
+  }
+}
+
+function prefillFromQueryString() {
+  const params = new URLSearchParams(window.location.search);
+  const values = {};
+
+  for (const name of CONSTATAR_FIELD_NAMES) {
+    if (params.has(name)) values[name] = params.get(name);
+  }
+
+  if (Object.keys(values).length) {
+    fillForm(values);
+    renderResult(output, 'Datos cargados desde la URL. Revise el comprobante antes de consultar ARCA PRODUCCION real.', 'idle');
+  }
+}
+
+prefillFromQueryString();
+
+exampleButton.addEventListener('click', () => {
+  fillForm(VALIDATED_EXAMPLE);
+  renderResult(output, 'Ejemplo validado cargado. Ejecutar solo como consulta manual controlada.', 'idle');
+});
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();

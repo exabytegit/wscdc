@@ -94,6 +94,20 @@ select {
   background: var(--surface);
 }
 
+input:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgb(15 118 110 / 14%);
+  outline: none;
+}
+
+code {
+  border-radius: 8px;
+  padding: .08rem .32rem;
+  background: rgb(15 118 110 / 10%);
+  color: var(--accent-dark);
+}
+
 .result-box {
   display: block;
   white-space: pre-wrap;

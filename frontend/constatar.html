@@ -19,47 +19,66 @@
     </header>
     <main class="page-shell">
       <section class="panel">
-        <p class="eyebrow">WSCDC producción</p>
-        <span class="badge danger">ARCA PRODUCCIÓN real</span>
+        <p class="eyebrow">WSCDC producci&oacute;n</p>
+        <span class="badge danger">ARCA PRODUCCI&Oacute;N real</span>
         <h1>Constatar comprobante</h1>
-        <p>Formulario para verificar CAE, CAI y CAEA contra la API WSCDC real. Use únicamente comprobantes reales y consultas manuales controladas.</p>
-        <p class="notice">No hacer loops ni pruebas masivas. Para Factura A suele corresponder `docTipoReceptor=80`.</p>
+        <p>Formulario para verificar CAE, CAI y CAEA contra la API WSCDC real. Use &uacute;nicamente comprobantes reales y consultas manuales controladas.</p>
+        <p class="notice">No hacer loops ni pruebas masivas. Para Factura A suele corresponder <code>docTipoReceptor=80</code>.</p>
       </section>
 
       <form id="constatar-form" class="form-grid" novalidate>
         <fieldset>
           <legend>Datos del comprobante</legend>
-          <label>Modalidad
-            <select name="cbteModo" required>
+          <label for="cbteModo">Modalidad
+            <select id="cbteModo" name="cbteModo" required>
               <option value="CAE">CAE</option>
               <option value="CAI">CAI</option>
               <option value="CAEA">CAEA</option>
             </select>
           </label>
-          <label>CUIT emisor <input name="cuitEmisor" inputmode="numeric" required placeholder="30714687650"></label>
-          <label>Punto de venta <input name="ptoVta" type="number" min="1" max="99998" required></label>
-          <label>Tipo comprobante <input name="cbteTipo" type="number" min="1" max="999" required></label>
-          <label>Número <input name="cbteNro" type="number" min="1" max="99999999" required></label>
-          <label>Fecha AAAAMMDD <input name="cbteFch" inputmode="numeric" required placeholder="20260504"></label>
-          <label>Importe total <input name="impTotal" inputmode="decimal" required placeholder="225786.00"></label>
-          <label>Código autorización <input name="codAutorizacion" inputmode="numeric" required placeholder="86184110432968"></label>
+          <label for="cuitEmisor">CUIT emisor
+            <input id="cuitEmisor" name="cuitEmisor" inputmode="numeric" required placeholder="30714687650" autocomplete="off">
+          </label>
+          <label for="ptoVta">Punto de venta
+            <input id="ptoVta" name="ptoVta" type="number" min="1" max="99998" required placeholder="2" autocomplete="off">
+          </label>
+          <label for="cbteTipo">Tipo de comprobante
+            <input id="cbteTipo" name="cbteTipo" type="number" min="1" max="999" required placeholder="1" autocomplete="off">
+          </label>
+          <label for="cbteNro">N&uacute;mero de comprobante
+            <input id="cbteNro" name="cbteNro" type="number" min="1" max="99999999" required placeholder="531979" autocomplete="off">
+          </label>
+          <label for="cbteFch">Fecha del comprobante (AAAAMMDD)
+            <input id="cbteFch" name="cbteFch" inputmode="numeric" required placeholder="20260504" autocomplete="off">
+          </label>
+          <label for="impTotal">Importe total
+            <input id="impTotal" name="impTotal" inputmode="decimal" required placeholder="225786.00" autocomplete="off">
+          </label>
+          <label for="codAutorizacion">C&oacute;digo de autorizaci&oacute;n
+            <input id="codAutorizacion" name="codAutorizacion" inputmode="numeric" required placeholder="86184110432968" autocomplete="off">
+          </label>
         </fieldset>
 
         <fieldset>
           <legend>Receptor</legend>
-          <label>Tipo documento <input name="docTipoReceptor" inputmode="numeric" placeholder="80"></label>
-          <label>Número documento <input name="docNroReceptor" inputmode="numeric" placeholder="20307764327"></label>
+          <label for="docTipoReceptor">Tipo de documento receptor
+            <input id="docTipoReceptor" name="docTipoReceptor" inputmode="numeric" placeholder="80" autocomplete="off">
+          </label>
+          <label for="docNroReceptor">N&uacute;mero de documento receptor
+            <input id="docNroReceptor" name="docNroReceptor" inputmode="numeric" placeholder="20307764327" autocomplete="off">
+          </label>
         </fieldset>
 
         <div class="form-actions">
           <button class="button primary" type="submit">Constatar comprobante</button>
+          <button id="load-example" class="button ghost" type="button">Cargar ejemplo validado</button>
           <button class="button ghost" type="reset">Limpiar</button>
         </div>
       </form>
 
       <section class="panel" aria-live="polite">
         <h2>Estado de consulta</h2>
-        <output id="result-output" class="result-box">Esperando datos. El resultado final se abrirá en resultado.html.</output>
+        <output id="result-output" class="result-box">Esperando datos. El resultado final se abrira en resultado.html.</output>
       </section>
     </main>
   </body>
