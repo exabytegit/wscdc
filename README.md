@@ -14,4 +14,5 @@ No se incluyen certificados, `.env.production`, credenciales reales ni TA cache.
 
 - `frontend/docs/manual-wscdc-notas-api.md`: resumen tecnico del manual oficial WSCDC.
 - `frontend/docs/casos-homologacion-wscdc.md`: plantilla y procedimiento para pruebas controladas de `ComprobanteConstatar`.
+- `frontend/docs/casos-produccion-controlados-wscdc.md`: casos reales controlados de produccion, solo para ejecucion manual.
 - `frontend/docs/checklist-homologacion.md`: pasos operativos de homologacion.
