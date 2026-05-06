@@ -1,11 +1,15 @@
+import { MODALIDADES, TIPOS_COMPROBANTE, TIPOS_DOCUMENTO } from '../catalogos.js';
 import { constatar } from '../api.js';
-import { normalizeConstatarPayload, validateConstatarForm } from '../validators.js';
+import { getConstatarFieldErrors, normalizeConstatarPayload, validateConstatarForm } from '../validators.js';
 import { renderResult } from '../renderers.js';
 
 const form = document.querySelector('#constatar-form');
 const output = document.querySelector('#result-output');
 const submitButton = form.querySelector('button[type="submit"]');
 const exampleButton = document.querySelector('#load-example');
+const fieldErrorNodes = new Map(
+  Array.from(document.querySelectorAll('[data-error-for]')).map((node) => [node.dataset.errorFor, node]),
+);
 
 export const CONSTATAR_FIELD_NAMES = [
   'cbteModo',
@@ -33,6 +37,19 @@ const VALIDATED_EXAMPLE = {
   docNroReceptor: '20307764327',
 };
 
+function renderSelectOptions(select, items, placeholder) {
+  select.innerHTML = [
+    `<option value="">${placeholder}</option>`,
+    ...items.map((item) => `<option value="${item.value}">${item.label}</option>`),
+  ].join('');
+}
+
+function hydrateCatalogs() {
+  renderSelectOptions(form.elements.namedItem('cbteModo'), MODALIDADES, 'Seleccionar modalidad');
+  renderSelectOptions(form.elements.namedItem('cbteTipo'), TIPOS_COMPROBANTE, 'Seleccionar tipo de comprobante');
+  renderSelectOptions(form.elements.namedItem('docTipoReceptor'), TIPOS_DOCUMENTO, 'Seleccionar tipo de documento');
+}
+
 function formToPayload(formData) {
   return Object.fromEntries(formData.entries());
 }
@@ -59,10 +76,31 @@ function prefillFromQueryString() {
   }
 }
 
+function clearFieldErrors() {
+  for (const [name, node] of fieldErrorNodes.entries()) {
+    node.textContent = '';
+    const field = form.elements.namedItem(name);
+    if (field) field.removeAttribute('aria-invalid');
+  }
+}
+
+function applyFieldErrors(payload) {
+  clearFieldErrors();
+  const fieldErrors = getConstatarFieldErrors(payload);
+  for (const [field, messages] of Object.entries(fieldErrors)) {
+    const node = fieldErrorNodes.get(field);
+    if (node) node.textContent = messages[0];
+    const input = form.elements.namedItem(field);
+    if (input) input.setAttribute('aria-invalid', 'true');
+  }
+}
+
+hydrateCatalogs();
 prefillFromQueryString();
 
 exampleButton.addEventListener('click', () => {
   fillForm(VALIDATED_EXAMPLE);
+  clearFieldErrors();
   renderResult(output, 'Ejemplo validado cargado. Ejecutar solo como consulta manual controlada.', 'idle');
 });
 
@@ -72,11 +110,13 @@ form.addEventListener('submit', async (event) => {
   const errors = validateConstatarForm(payload);
 
   if (errors.length) {
+    applyFieldErrors(payload);
     renderResult(output, errors.join('\n'), 'functional-error');
     return;
   }
 
   try {
+    clearFieldErrors();
     submitButton.disabled = true;
     submitButton.textContent = 'Consultando...';
     renderResult(output, 'Consultando API...', 'loading');
@@ -97,5 +137,6 @@ form.addEventListener('submit', async (event) => {
 });
 
 form.addEventListener('reset', () => {
+  clearFieldErrors();
   renderResult(output, 'Esperando datos.', 'idle');
 });

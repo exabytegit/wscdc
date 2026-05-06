@@ -84,6 +84,19 @@ label {
   font-weight: 700;
 }
 
+.field-help {
+  color: var(--muted);
+  font-size: .92rem;
+  font-weight: 400;
+}
+
+.field-error {
+  min-height: 1rem;
+  color: var(--danger);
+  font-size: .92rem;
+  font-weight: 700;
+}
+
 input,
 select {
   width: 100%;
@@ -154,4 +167,67 @@ code {
 
 .status-card-wide {
   grid-column: 1 / -1;
+}
+
+.result-hero h2 {
+  margin-bottom: .35rem;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+}
+
+.result-summary {
+  margin: 0;
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+.result-block + .result-block {
+  margin-top: 1.25rem;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+
+.result-grid div {
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgb(15 118 110 / 5%);
+  border: 1px solid rgb(15 118 110 / 12%);
+}
+
+.result-grid-wide {
+  grid-column: 1 / -1;
+}
+
+.result-grid dt {
+  margin-bottom: .35rem;
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.result-grid dd {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.result-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.result-list li + li {
+  margin-top: .45rem;
+}
+
+@media (max-width: 759px) {
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
 }

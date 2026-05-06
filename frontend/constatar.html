@@ -19,53 +19,73 @@
     </header>
     <main class="page-shell">
       <section class="panel">
-        <p class="eyebrow">WSCDC producci&oacute;n</p>
-        <span class="badge danger">ARCA PRODUCCI&Oacute;N real</span>
-        <h1>Constatar comprobante</h1>
-        <p>Formulario para verificar CAE, CAI y CAEA contra la API WSCDC real. Use &uacute;nicamente comprobantes reales y consultas manuales controladas.</p>
-        <p class="notice">No hacer loops ni pruebas masivas. Para Factura A suele corresponder <code>docTipoReceptor=80</code>.</p>
+        <p class="eyebrow">WSCDC produccion</p>
+        <span class="badge danger">ARCA PRODUCCION real</span>
+        <h1>Constatacion de Comprobantes</h1>
+        <p>UX inspirada en el flujo publico de ARCA, pero sin captcha y con una consulta directa a la API WSCDC propia.</p>
+        <p class="notice">Este entorno consulta ARCA PRODUCCION real. Use comprobantes reales y consultas manuales controladas.</p>
       </section>
 
       <form id="constatar-form" class="form-grid" novalidate>
         <fieldset>
           <legend>Datos del comprobante</legend>
-          <label for="cbteModo">Modalidad
-            <select id="cbteModo" name="cbteModo" required>
-              <option value="CAE">CAE</option>
-              <option value="CAI">CAI</option>
-              <option value="CAEA">CAEA</option>
-            </select>
+
+          <label for="cbteModo">Modalidad de autorizacion
+            <select id="cbteModo" name="cbteModo" required></select>
+            <span class="field-error" data-error-for="cbteModo"></span>
           </label>
+
           <label for="cuitEmisor">CUIT emisor
             <input id="cuitEmisor" name="cuitEmisor" inputmode="numeric" required placeholder="30714687650" autocomplete="off">
+            <span class="field-error" data-error-for="cuitEmisor"></span>
           </label>
-          <label for="ptoVta">Punto de venta
-            <input id="ptoVta" name="ptoVta" type="number" min="1" max="99998" required placeholder="2" autocomplete="off">
+
+          <label for="codAutorizacion">Codigo de autorizacion
+            <input id="codAutorizacion" name="codAutorizacion" inputmode="numeric" required placeholder="86184110432968" autocomplete="off">
+            <span class="field-help">CAE, CAI o CAEA de 14 digitos.</span>
+            <span class="field-error" data-error-for="codAutorizacion"></span>
           </label>
-          <label for="cbteTipo">Tipo de comprobante
-            <input id="cbteTipo" name="cbteTipo" type="number" min="1" max="999" required placeholder="1" autocomplete="off">
-          </label>
-          <label for="cbteNro">N&uacute;mero de comprobante
-            <input id="cbteNro" name="cbteNro" type="number" min="1" max="99999999" required placeholder="531979" autocomplete="off">
-          </label>
-          <label for="cbteFch">Fecha del comprobante (AAAAMMDD)
+
+          <label for="cbteFch">Fecha de emision
             <input id="cbteFch" name="cbteFch" inputmode="numeric" required placeholder="20260504" autocomplete="off">
+            <span class="field-help">Formato requerido por WSCDC: AAAAMMDD.</span>
+            <span class="field-error" data-error-for="cbteFch"></span>
           </label>
+
+          <label for="cbteTipo">Tipo de comprobante
+            <select id="cbteTipo" name="cbteTipo" required></select>
+            <span class="field-error" data-error-for="cbteTipo"></span>
+          </label>
+
+          <div class="field-row">
+            <label for="ptoVta">Punto de venta
+              <input id="ptoVta" name="ptoVta" type="number" min="1" max="99998" required placeholder="2" autocomplete="off">
+              <span class="field-error" data-error-for="ptoVta"></span>
+            </label>
+            <label for="cbteNro">Numero de comprobante
+              <input id="cbteNro" name="cbteNro" type="number" min="1" max="99999999" required placeholder="531979" autocomplete="off">
+              <span class="field-error" data-error-for="cbteNro"></span>
+            </label>
+          </div>
+
           <label for="impTotal">Importe total
             <input id="impTotal" name="impTotal" inputmode="decimal" required placeholder="225786.00" autocomplete="off">
-          </label>
-          <label for="codAutorizacion">C&oacute;digo de autorizaci&oacute;n
-            <input id="codAutorizacion" name="codAutorizacion" inputmode="numeric" required placeholder="86184110432968" autocomplete="off">
+            <span class="field-help">Usar punto como separador decimal.</span>
+            <span class="field-error" data-error-for="impTotal"></span>
           </label>
         </fieldset>
 
         <fieldset>
-          <legend>Receptor</legend>
-          <label for="docTipoReceptor">Tipo de documento receptor
-            <input id="docTipoReceptor" name="docTipoReceptor" inputmode="numeric" placeholder="80" autocomplete="off">
+          <legend>Documento del receptor</legend>
+
+          <label for="docTipoReceptor">Tipo documento receptor
+            <select id="docTipoReceptor" name="docTipoReceptor"></select>
+            <span class="field-error" data-error-for="docTipoReceptor"></span>
           </label>
-          <label for="docNroReceptor">N&uacute;mero de documento receptor
+
+          <label for="docNroReceptor">Numero documento receptor
             <input id="docNroReceptor" name="docNroReceptor" inputmode="numeric" placeholder="20307764327" autocomplete="off">
+            <span class="field-error" data-error-for="docNroReceptor"></span>
           </label>
         </fieldset>
 
