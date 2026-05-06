@@ -1,5 +1,32 @@
-import { describe, expect, it } from 'vitest';
-import { buildLoginCmsEnvelope, buildLoginTicketRequest, isTicketValid, parseLoginCmsResponse } from '../src/services/wsaa.js';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+  buildLoginCmsEnvelope,
+  buildLoginTicketRequest,
+  clearTicketCache,
+  getAccessTicket,
+  getTicketCachePath,
+  isTicketValid,
+  parseLoginCmsResponse,
+  persistTicket,
+  readPersistedTicket,
+} from '../src/services/wsaa.js';
+
+let tmpDirs = [];
+
+async function makeTmpDir() {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'wscdc-wsaa-test-'));
+  tmpDirs.push(dir);
+  return dir;
+}
+
+afterEach(async () => {
+  clearTicketCache();
+  await Promise.all(tmpDirs.map((dir) => fs.rm(dir, { recursive: true, force: true })));
+  tmpDirs = [];
+});
 
 describe('wsaa service', () => {
   it('builds a LoginTicketRequest for wscdc', () => {
@@ -42,5 +69,55 @@ describe('wsaa service', () => {
       sign: 'sig',
       expirationTime: new Date('2026-05-04T16:00:00.000Z'),
     }, new Date('2026-05-04T15:00:00.000Z'))).toBe(true);
+  });
+
+  it('builds TA cache path separated by environment and service', () => {
+    const cachePath = getTicketCachePath({
+      cacheDir: 'tmp',
+      arcaEnv: 'produccion',
+      service: 'wscdc',
+    });
+
+    expect(cachePath).toBe(path.join('tmp', 'ta-produccion-wscdc.json'));
+  });
+
+  it('persists and reads tickets using the WSAPOC-compatible JSON shape', async () => {
+    const cachePath = path.join(await makeTmpDir(), 'ta-homologacion-wscdc.json');
+
+    await persistTicket({
+      token: 'tok',
+      sign: 'sig',
+      expirationTime: new Date('2026-05-04T23:00:00.000Z'),
+    }, cachePath);
+
+    const raw = JSON.parse(await fs.readFile(cachePath, 'utf8'));
+    expect(raw).toEqual({
+      token: 'tok',
+      sign: 'sig',
+      expirationTime: '2026-05-04T23:00:00.000Z',
+    });
+
+    const ticket = await readPersistedTicket(cachePath);
+    expect(ticket).toMatchObject({ token: 'tok', sign: 'sig' });
+    expect(ticket.expirationTime).toBeInstanceOf(Date);
+  });
+
+  it('reuses a valid TA from disk without requesting a new one', async () => {
+    const cachePath = path.join(await makeTmpDir(), 'ta-produccion-wscdc.json');
+    const httpClient = { post: vi.fn() };
+
+    await persistTicket({
+      token: 'cached-token',
+      sign: 'cached-sign',
+      expirationTime: new Date(Date.now() + 60 * 60 * 1000),
+    }, cachePath);
+
+    const ticket = await getAccessTicket(httpClient, { cachePath });
+
+    expect(ticket).toMatchObject({
+      token: 'cached-token',
+      sign: 'cached-sign',
+    });
+    expect(httpClient.post).not.toHaveBeenCalled();
   });
 });

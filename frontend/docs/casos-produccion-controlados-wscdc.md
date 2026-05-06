@@ -9,6 +9,8 @@ No ejecutar estos casos automaticamente. No usarlos en homologacion. No hacer pr
 Antes de ejecutar cualquier caso de este documento:
 
 - La API debe estar levantada con `ARCA_ENV=produccion`.
+- Debe pasar previamente `GET http://localhost:3002/api/health`.
+- Health debe confirmar `ok=true`, `service=wscdc`, `arcaEnv=produccion`, `appserver=OK`, `dbserver=OK` y `authserver=OK` o estado operacional/degraded valido.
 - El servicio WSCDC productivo debe estar autorizado para el computador fiscal correspondiente.
 - `.env.production`, certificados productivos y TA cache productivo deben estar configurados fuera del control de version.
 - Debe ejecutarse una unica prueba manual por caso.

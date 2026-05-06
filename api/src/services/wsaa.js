@@ -7,16 +7,25 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { config } from '../config.js';
 import { ApiError, normalizeExternalError } from '../errors.js';
+import { logger } from '../logger.js';
 import { escapeXml, findFirst, parseXml } from '../utils/xml.js';
 import { toWsaaTimestamp } from '../utils/date.js';
 
 const execFileAsync = promisify(execFile);
-const persistedTicketPath = path.join(config.TA_CACHE_DIR, `ta-${config.ARCA_ENV}-${config.ARCA_SERVICE}.json`);
+const persistedTicketPath = getTicketCachePath();
 
 let cachedTa = null;
 
 export function clearTicketCache() {
   cachedTa = null;
+}
+
+export function getTicketCachePath({
+  cacheDir = config.TA_CACHE_DIR,
+  arcaEnv = config.ARCA_ENV,
+  service = config.ARCA_SERVICE,
+} = {}) {
+  return path.join(cacheDir, `ta-${arcaEnv}-${service}.json`);
 }
 
 function normalizeTicket(ticket) {
@@ -28,9 +37,9 @@ function normalizeTicket(ticket) {
   };
 }
 
-async function readPersistedTicket() {
+export async function readPersistedTicket(cachePath = persistedTicketPath) {
   try {
-    const raw = await fs.readFile(persistedTicketPath, 'utf8');
+    const raw = await fs.readFile(cachePath, 'utf8');
     return normalizeTicket(JSON.parse(raw));
   } catch (error) {
     if (error?.code === 'ENOENT') return null;
@@ -43,13 +52,13 @@ async function readPersistedTicket() {
   }
 }
 
-async function persistTicket(ticket) {
+export async function persistTicket(ticket, cachePath = persistedTicketPath) {
   const normalized = normalizeTicket(ticket);
   if (!normalized) return;
 
   try {
-    await fs.mkdir(path.dirname(persistedTicketPath), { recursive: true });
-    await fs.writeFile(persistedTicketPath, JSON.stringify({
+    await fs.mkdir(path.dirname(cachePath), { recursive: true });
+    await fs.writeFile(cachePath, JSON.stringify({
       token: normalized.token,
       sign: normalized.sign,
       expirationTime: normalized.expirationTime.toISOString(),
@@ -191,24 +200,27 @@ export async function requestNewTicket(httpClient = axios) {
   }
 }
 
-export async function getAccessTicket(httpClient = axios) {
+export async function getAccessTicket(httpClient = axios, { cachePath = persistedTicketPath } = {}) {
   if (isTicketValid(cachedTa)) return cachedTa;
 
-  const persistedTicket = await readPersistedTicket();
+  const persistedTicket = await readPersistedTicket(cachePath);
   if (isTicketValid(persistedTicket)) {
     cachedTa = persistedTicket;
+    logger.info({ arcaEnv: config.ARCA_ENV, service: config.ARCA_SERVICE }, 'TA cargado desde cache');
     return cachedTa;
   }
 
   try {
     cachedTa = await requestNewTicket(httpClient);
-    await persistTicket(cachedTa);
+    await persistTicket(cachedTa, cachePath);
+    logger.info({ arcaEnv: config.ARCA_ENV, service: config.ARCA_SERVICE }, 'TA generado nuevo');
     return cachedTa;
   } catch (error) {
     if (error instanceof ApiError && error.scenario === 'ALREADY_AUTHENTICATED') {
-      const recoveredTicket = await readPersistedTicket();
+      const recoveredTicket = await readPersistedTicket(cachePath);
       if (isTicketValid(recoveredTicket)) {
         cachedTa = recoveredTicket;
+        logger.info({ arcaEnv: config.ARCA_ENV, service: config.ARCA_SERVICE }, 'TA cargado desde cache');
         return cachedTa;
       }
 

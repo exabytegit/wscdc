@@ -32,7 +32,7 @@ const effectiveWsaaUrl = initialEnv.WSAA_URL
 const effectiveWscdcUrl = initialEnv.WSCDC_URL
   ?? (effectiveArcaEnv === 'produccion' ? process.env.ARCA_WSCDC_PROD_URL : process.env.ARCA_WSCDC_HOMO_URL)
   ?? process.env.WSCDC_URL
-  ?? (effectiveArcaEnv === 'produccion' ? 'https://servicios1.afip.gob.ar/WSCDC/service.asmx' : 'https://wswhomo.afip.gob.ar/WSCDC/service.asmx');
+  ?? (effectiveArcaEnv === 'produccion' ? 'https://servicios1.afip.gov.ar/WSCDC/service.asmx' : 'https://wswhomo.afip.gob.ar/WSCDC/service.asmx');
 const effectiveWscdcNamespace = initialEnv.WSCDC_NAMESPACE
   ?? process.env.ARCA_WSCDC_NAMESPACE
   ?? process.env.WSCDC_NAMESPACE

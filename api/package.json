@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "dev:prod": "cross-env ARCA_ENV=produccion NODE_ENV=production node --watch src/server.js",
+    "dev:prod:legacy-tls": "cross-env ARCA_ENV=produccion NODE_ENV=production NODE_OPTIONS=--tls-cipher-list=DEFAULT@SECLEVEL=1 node --watch src/server.js",
     "dev:homo": "cross-env ARCA_ENV=homologacion NODE_ENV=development node --watch src/server.js",
     "start": "node src/server.js",
     "test": "vitest run --pool=threads",
