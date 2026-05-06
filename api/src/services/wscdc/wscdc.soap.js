@@ -1,6 +1,8 @@
 import axios from 'axios';
+import https from 'node:https';
 import { config } from '../../config.js';
 import { ApiError, normalizeExternalError } from '../../errors.js';
+import { logger } from '../../logger.js';
 import { asArray, escapeXml, findFirst, parseXml } from '../../utils/xml.js';
 import { createWsaaClient } from '../wsaa.js';
 import {
@@ -19,6 +21,14 @@ export const WSCDC_OPERATIONS = {
   opcionales: 'OpcionalesTipoConsultar',
   constatar: 'ComprobanteConstatar',
 };
+
+export const wscdcHttpsAgent = new https.Agent({
+  rejectUnauthorized: true,
+  ciphers: 'DEFAULT:@SECLEVEL=1',
+  minVersion: 'TLSv1.2',
+});
+
+let tlsCompatibilityLogged = false;
 
 export function buildSoapAction(operation) {
   return `${config.WSCDC_NAMESPACE.replace(/\/?$/, '/')}${operation}`;
@@ -82,7 +92,13 @@ export class WscdcClient {
   async post(operation, innerXml = '') {
     const envelope = buildEnvelope(operation, innerXml);
     try {
+      if (!tlsCompatibilityLogged) {
+        logger.info('TLS compatibility mode enabled for WSCDC');
+        tlsCompatibilityLogged = true;
+      }
+
       const { data } = await this.httpClient.post(config.WSCDC_URL, envelope, {
+        httpsAgent: wscdcHttpsAgent,
         timeout: config.REQUEST_TIMEOUT_MS,
         headers: {
           'Content-Type': 'text/xml; charset=utf-8',

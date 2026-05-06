@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { WscdcClient, buildEnvelope, buildSoapAction, cmpReqXml, WSCDC_OPERATIONS } from '../src/services/wscdc/wscdc.soap.js';
+import { WscdcClient, buildEnvelope, buildSoapAction, cmpReqXml, wscdcHttpsAgent, WSCDC_OPERATIONS } from '../src/services/wscdc/wscdc.soap.js';
 import { mapCatalogResponse, mapConstatarResponse, mapDummyResponse } from '../src/services/wscdc/wscdc.mapper.js';
 import { parseXml } from '../src/utils/xml.js';
 
@@ -89,7 +89,14 @@ describe('wscdc soap client', () => {
     const httpClient = { post: vi.fn().mockResolvedValue({ data: `<ComprobanteDummyResult><AppServer>OK</AppServer><DbServer>OK</DbServer><AuthServer>OK</AuthServer></ComprobanteDummyResult>` }) };
     const client = new WscdcClient({ httpClient, wsaaClient: { getAccessTicket: vi.fn() } });
     await expect(client.dummy()).resolves.toMatchObject({ appserver: 'OK' });
-    expect(httpClient.post.mock.calls[0][2].headers.SOAPAction).toBe('http://servicios1.afip.gob.ar/wscdc/ComprobanteDummy');
+    const options = httpClient.post.mock.calls[0][2];
+    expect(options.headers.SOAPAction).toBe('http://servicios1.afip.gob.ar/wscdc/ComprobanteDummy');
+    expect(options.httpsAgent).toBe(wscdcHttpsAgent);
+    expect(options.httpsAgent.options).toMatchObject({
+      rejectUnauthorized: true,
+      ciphers: 'DEFAULT:@SECLEVEL=1',
+      minVersion: 'TLSv1.2',
+    });
   });
 
   it('posts ComprobanteConstatar with Auth and CmpReq', async () => {
