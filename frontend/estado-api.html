@@ -12,17 +12,19 @@
   <body>
     <header class="site-header">
       <nav class="nav" aria-label="Navegacion principal">
-        <a class="brand" href="index.html">WSCDC</a>
-        <a href="constatar.html">Constatar</a>
+        <a class="brand" href="index.html">CC</a>
+        <a href="constatar.html">Constatar comprobante</a>
         <a aria-current="page" href="estado-api.html">Estado API</a>
       </nav>
     </header>
     <main class="page-shell">
       <section class="panel">
-        <p class="eyebrow">Diagnostico</p>
-        <h1>Estado tecnico</h1>
-        <p>Consulta la API intermedia. No expone Token, Sign, certificados ni XML SOAP.</p>
+        <p class="eyebrow">Diagnóstico WSCDC</p>
+        <span class="badge danger">ARCA PRODUCCIÓN real</span>
+        <h1>Estado técnico</h1>
+        <p>Consulta `GET /api/wscdc/dummy`. No expone Token, Sign, certificados ni XML SOAP.</p>
         <button id="refresh-status" class="button primary" type="button">Actualizar</button>
+        <a class="button ghost" href="index.html">Volver al inicio</a>
       </section>
       <section class="status-grid" id="status-output" aria-live="polite"></section>
     </main>

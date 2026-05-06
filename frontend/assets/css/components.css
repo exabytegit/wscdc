@@ -5,6 +5,37 @@
   text-transform: uppercase;
 }
 
+.badge {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  padding: .35rem .7rem;
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+}
+
+.badge.danger,
+.notice {
+  color: var(--danger);
+  background: rgb(185 28 28 / 8%);
+  border-color: rgb(185 28 28 / 30%);
+}
+
+.lead {
+  font-size: clamp(1.25rem, 2.5vw, 1.7rem);
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+.notice {
+  border: 1px solid;
+  border-radius: 18px;
+  padding: .9rem 1rem;
+}
+
 h1 {
   margin: .2rem 0 1rem;
   font-size: clamp(2.2rem, 6vw, 5rem);
@@ -29,6 +60,11 @@ h2 {
   padding: .8rem 1rem;
   cursor: pointer;
   text-decoration: none;
+}
+
+.button:disabled {
+  cursor: wait;
+  opacity: .62;
 }
 
 .button.primary {
@@ -78,10 +114,12 @@ select {
 .status-card[data-state="operational"],
 .result-box[data-state="success-approved"] {
   border-color: var(--ok);
+  box-shadow: 0 0 0 3px rgb(21 128 61 / 14%), var(--shadow);
 }
 
 .result-box[data-state="success-approved-with-observations"] {
   border-color: var(--warn);
+  box-shadow: 0 0 0 3px rgb(180 83 9 / 14%), var(--shadow);
 }
 
 .status-card[data-state="degraded"] {
@@ -93,4 +131,13 @@ select {
 .result-box[data-state="technical-error"],
 .result-box[data-state="functional-error"] {
   border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgb(185 28 28 / 14%), var(--shadow);
+}
+
+.result-box[data-state="loading"] {
+  border-color: var(--accent);
+}
+
+.status-card-wide {
+  grid-column: 1 / -1;
 }

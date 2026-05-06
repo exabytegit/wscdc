@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>WSCDC Constatacion</title>
+    <title>Constatación de Comprobantes WSCDC</title>
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/components.css">
@@ -11,19 +11,22 @@
   <body>
     <header class="site-header">
       <nav class="nav" aria-label="Navegacion principal">
-        <a class="brand" href="index.html">WSCDC</a>
-        <a href="constatar.html">Constatar</a>
+        <a class="brand" href="index.html">CC</a>
+        <a href="constatar.html">Constatar comprobante</a>
         <a href="estado-api.html">Estado API</a>
       </nav>
     </header>
     <main class="hero">
       <section class="hero-card">
-        <p class="eyebrow">ARCA / AFIP</p>
-        <h1>Constatacion de comprobantes con API intermedia segura.</h1>
-        <p>Frontend liviano, backend con WSAA y SOAP encapsulados, y secretos siempre fuera del navegador.</p>
+        <p class="eyebrow">WSCDC</p>
+        <span class="badge danger">ARCA PRODUCCIÓN real</span>
+        <h1>Constatación de Comprobantes</h1>
+        <p class="lead">Verificación de CAE, CAI y CAEA.</p>
+        <p>Verifique comprobantes emitidos autorizados por ARCA mediante una API intermedia segura. Los secretos quedan siempre fuera del navegador.</p>
+        <p class="notice">Este entorno consulta ARCA PRODUCCIÓN real. Use consultas controladas. No ejecute pruebas masivas.</p>
         <div class="actions">
-          <a class="button primary" href="constatar.html">Iniciar constatacion</a>
-          <a class="button ghost" href="estado-api.html">Ver estado tecnico</a>
+          <a class="button primary" href="constatar.html">Constatar comprobante</a>
+          <a class="button ghost" href="estado-api.html">Estado de API</a>
         </div>
       </section>
     </main>

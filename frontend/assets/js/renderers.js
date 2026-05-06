@@ -41,19 +41,38 @@ function formatResult(result) {
 }
 
 export function renderStatus(target, status) {
+  const isOk = status.ok === true || (status.appserver === 'OK' && status.dbserver === 'OK' && status.authserver === 'OK');
+  const visualState = isOk ? 'operational' : status.status || 'unavailable';
   const cards = [
-    ['API', status.api || 'NO'],
+    ['API', isOk ? 'OK' : status.api || 'NO'],
     ['AppServer', status.appserver || 'NO'],
     ['DbServer', status.dbserver || 'NO'],
     ['AuthServer', status.authserver || 'NO'],
     ['Ambiente', status.arcaEnv || 'desconocido'],
     ['Servicio', status.service || 'wscdc'],
+    ['Actualizado', status.updatedAt || new Date().toLocaleString('es-AR')],
   ];
 
   target.innerHTML = cards.map(([label, value]) => `
-    <article class="status-card" data-state="${status.status || 'unavailable'}">
+    <article class="status-card" data-state="${visualState}">
       <p class="eyebrow">${label}</p>
       <h2>${value}</h2>
     </article>
-  `).join('');
+  `).join('') + (status.descripcion ? `
+    <article class="status-card status-card-wide" data-state="unavailable">
+      <p class="eyebrow">Detalle</p>
+      <h2>${status.descripcion}</h2>
+    </article>
+  ` : '');
+}
+
+export function renderStoredResult(target, stored) {
+  if (!stored) {
+    target.dataset.state = 'technical-error';
+    target.textContent = 'No hay resultado guardado. Vuelva a constatar un comprobante.';
+    return;
+  }
+
+  const state = stateFromVerdict(stored.response);
+  renderResult(target, stored.response, state);
 }

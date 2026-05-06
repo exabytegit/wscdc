@@ -7,20 +7,29 @@
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/components.css">
+    <script type="module" src="assets/js/pages/resultado.js"></script>
   </head>
   <body>
     <header class="site-header">
       <nav class="nav" aria-label="Navegacion principal">
-        <a class="brand" href="index.html">WSCDC</a>
-        <a href="constatar.html">Constatar</a>
+        <a class="brand" href="index.html">CC</a>
+        <a href="constatar.html">Constatar comprobante</a>
         <a href="estado-api.html">Estado API</a>
       </nav>
     </header>
     <main class="page-shell">
       <section class="panel">
-        <p class="eyebrow">Resultado</p>
-        <h1>Detalle de constatacion</h1>
-        <p>Esta pantalla queda preparada para renderizar resultados persistidos o compartidos en una etapa posterior.</p>
+        <p class="eyebrow">Resultado WSCDC</p>
+        <span class="badge danger">ARCA PRODUCCIÓN real</span>
+        <h1>Detalle de constatación</h1>
+        <p id="result-meta">Resultado temporal guardado en el navegador para esta sesión.</p>
+      </section>
+      <section class="panel" aria-live="polite">
+        <output id="result-output" class="result-box">Cargando resultado...</output>
+        <div class="actions">
+          <a class="button primary" href="constatar.html">Nueva consulta</a>
+          <a class="button ghost" href="index.html">Volver al inicio</a>
+        </div>
       </section>
     </main>
   </body>

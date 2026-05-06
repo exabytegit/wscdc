@@ -24,6 +24,7 @@ export async function apiFetch(path, options = {}) {
 }
 
 export const getHealth = () => apiFetch('/health');
+export const getDummy = () => apiFetch('/wscdc/dummy');
 export const constatar = (payload) => apiFetch('/wscdc/constatar', {
   method: 'POST',
   body: JSON.stringify(payload),
