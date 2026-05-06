@@ -104,19 +104,14 @@ Puede incluir `events` informativos. Si ARCA devuelve `Observaciones`, registrar
 
 ### Resultado obtenido
 
-Pendiente.
+Intento registrado el `2026-05-05 21:04:00 -03:00`.
 
-Registrar al ejecutar:
-
-- Fecha y hora.
-- HTTP status.
-- `ok`.
-- `verdict`.
-- `resultado`.
-- `observaciones`.
-- `errors`.
-- `events`.
-- `requestId`, si aparece.
+- API iniciada en `ARCA_ENV=produccion`, `service=wscdc`, `port=3002`.
+- Verificacion previa `GET /api/health`: `HTTP 502`.
+- Error resumido: `NETWORK_ERROR` al invocar `ComprobanteDummy` contra WSCDC produccion.
+- Detalle tecnico no sensible: handshake TLS rechazado por `dh key too small`.
+- `POST /api/wscdc/constatar`: no ejecutado.
+- Motivo: la verificacion previa de health no fue exitosa.
 
 No pegar Token, Sign, certificados, claves, rutas sensibles ni XML SOAP.
 

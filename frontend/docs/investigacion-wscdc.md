@@ -14,8 +14,8 @@ Endpoints de referencia:
 
 - Homologacion runtime: `https://wswhomo.afip.gob.ar/WSCDC/service.asmx`
 - Homologacion WSDL: `https://wswhomo.afip.gob.ar/WSCDC/service.asmx?WSDL`
-- Produccion runtime: `https://servicios1.arca.gob.ar/WSCDC/service.asmx`
-- Produccion WSDL: `https://servicios1.arca.gob.ar/WSCDC/service.asmx?WSDL`
+- Produccion runtime: `https://servicios1.afip.gob.ar/WSCDC/service.asmx`
+- Produccion WSDL: `https://servicios1.afip.gob.ar/WSCDC/service.asmx?WSDL`
 
 Operaciones previstas:
 

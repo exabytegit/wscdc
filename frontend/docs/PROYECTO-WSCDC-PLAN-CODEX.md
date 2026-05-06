@@ -39,7 +39,7 @@ https://wswhomo.afip.gob.ar/WSCDC/service.asmx?WSDL
 3. WSDL oficial WSCDC producción:
 
 ```text
-https://servicios1.arca.gob.ar/WSCDC/service.asmx?WSDL
+https://servicios1.afip.gob.ar/WSCDC/service.asmx?WSDL
 ```
 
 4. Documentación WSAA oficial ya utilizada en el proyecto WSAPOC:
@@ -184,13 +184,13 @@ https://wswhomo.afip.gob.ar/WSCDC/service.asmx?WSDL
 Runtime:
 
 ```text
-https://servicios1.arca.gob.ar/WSCDC/service.asmx
+https://servicios1.afip.gob.ar/WSCDC/service.asmx
 ```
 
 WSDL:
 
 ```text
-https://servicios1.arca.gob.ar/WSCDC/service.asmx?WSDL
+https://servicios1.afip.gob.ar/WSCDC/service.asmx?WSDL
 ```
 
 ---
@@ -811,7 +811,7 @@ ARCA_WSAA_HOMO_URL=https://wsaahomo.afip.gov.ar/ws/services/LoginCms
 ARCA_WSAA_PROD_URL=https://wsaa.afip.gov.ar/ws/services/LoginCms
 
 ARCA_WSCDC_HOMO_URL=https://wswhomo.afip.gob.ar/WSCDC/service.asmx
-ARCA_WSCDC_PROD_URL=https://servicios1.arca.gob.ar/WSCDC/service.asmx
+ARCA_WSCDC_PROD_URL=https://servicios1.afip.gob.ar/WSCDC/service.asmx
 
 ARCA_CERT_PATH=
 ARCA_KEY_PATH=
@@ -1185,4 +1185,3 @@ JSON normalizado.
 Ambiente visible.
 Secretos fuera del repo.
 ```
-

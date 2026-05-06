@@ -16,3 +16,4 @@ No se incluyen certificados, `.env.production`, credenciales reales ni TA cache.
 - `frontend/docs/casos-homologacion-wscdc.md`: plantilla y procedimiento para pruebas controladas de `ComprobanteConstatar`.
 - `frontend/docs/casos-produccion-controlados-wscdc.md`: casos reales controlados de produccion, solo para ejecucion manual.
 - `frontend/docs/checklist-homologacion.md`: pasos operativos de homologacion.
+- `frontend/docs/troubleshooting.md`: errores conocidos de conectividad y TLS.
